@@ -39,21 +39,23 @@
 							</div>
 							<input type="text" class="form-control" id="hex-a2h" placeholder="Hex">
 						</div>
-						<h4>Blake-256 a String</h4>
+						<h4>Blake2 a String</h4>
 						<div class="input-group">
-							<input type="text" class="form-control" id="input-b256" placeholder="Input">
+							<input type="text" class="form-control col-5" id="input-blake2" placeholder="Input">
+							<input type="text" class="form-control col-1" id="bits-blake2" placeholder="Bits" value="256">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="addon-wrapping">&#8594;</span>
 							</div>
-							<div type="text" class="form-control" id="hash-b256" style="overflow: scroll;">Hash</div>
+							<div type="text" class="form-control" id="hash-blake2" style="overflow: scroll;">Hash</div>
 						</div>
-						<h4>XXHash 128 a String</h4>
+						<h4>XXHash a String</h4>
 						<div class="input-group">
-							<input type="text" class="form-control" id="input-xx128" placeholder="Input">
+							<input type="text" class="form-control col-5" id="input-xxhash" placeholder="Input">
+							<input type="text" class="form-control col-1" id="bits-xxhash" placeholder="Bits" value="128">
 							<div class="input-group-prepend">
 								<span class="input-group-text" id="addon-wrapping">&#8594;</span>
 							</div>
-							<div type="text" class="form-control" id="hash-xx128" style="overflow: scroll;">Hash</div>
+							<div type="text" class="form-control" id="hash-xxhash" style="overflow: scroll;">Hash</div>
 						</div>
 						<h4>Seed to Address</h4>
 						<div class="input-group">

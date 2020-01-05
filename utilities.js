@@ -53,35 +53,39 @@ function hex2account() {
 }
 
 /* Blake-256 a String */
-let b256 = {
-	"input": document.getElementById("input-b256"),
-	"hash": document.getElementById("hash-b256")
+let blake2 = {
+	"input": document.getElementById("input-blake2"),
+	"bits": document.getElementById("bits-blake2"),
+	"hash": document.getElementById("hash-blake2")
 };
 
-b256.input.addEventListener("input", blake2string);
+blake2.input.addEventListener("input", blake2string);
+blake2.bits.addEventListener("input", blake2string);
 
 function blake2string() {
 	try {
-		b256.hash.innerText = util_crypto.blake2AsHex(b256.input.value, 256);
+		blake2.hash.innerText = util_crypto.blake2AsHex(blake2.input.value, blake2.bits.value);
 	} catch(e) {
-		b256.hash.innerText = "Error";
+		blake2.hash.innerText = "Error";
 		console.error(e);
 	}
 }
 
 /* XXHash a String */
-let xx128 = {
-	"input": document.getElementById("input-xx128"),
-	"hash": document.getElementById("hash-xx128")
+let xxhash = {
+	"input": document.getElementById("input-xxhash"),
+	"bits": document.getElementById("bits-xxhash"),
+	"hash": document.getElementById("hash-xxhash")
 };
 
-xx128.input.addEventListener("input", xxhash2string);
+xxhash.input.addEventListener("input", xxhash2string);
+xxhash.bits.addEventListener("input", xxhash2string);
 
 function xxhash2string() {
 	try {
-		xx128.hash.innerText = util_crypto.xxhashAsHex(xx128.input.value, 128);
+		xxhash.hash.innerText = util_crypto.xxhashAsHex(xxhash.input.value, xxhash.bits.value);
 	} catch(e) {
-		xx128.hash.innerText = "Error";
+		xxhash.hash.innerText = "Error";
 		console.error(e);
 	}
 }
@@ -107,8 +111,8 @@ function seed2address() {
 
 /* Change Address Prefix */
 let cap = {
-	"prefix": document.getElementById("prefix-cap"),
 	"address": document.getElementById("address-cap"),
+	"prefix": document.getElementById("prefix-cap"),
 	"result": document.getElementById("result-cap")
 };
 
