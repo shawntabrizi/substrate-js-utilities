@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<!-- Custom styles for this template -->
-	<link href="../custom.css" rel="stylesheet">
+	<link href="custom.css" rel="stylesheet">
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -62,6 +62,18 @@
 								<span class="input-group-text" id="addon-wrapping">&#8594;</span>
 							</div>
 							<div type="text" class="form-control" id="address-s2a" style="overflow: scroll;">Address
+							</div>
+						</div>
+						<h4>Change Address Prefix
+							<a href="https://github.com/paritytech/substrate/wiki/External-Address-Format-(SS58)#address-type">(Prefix Lookup)</a>
+						</h4>
+						<div class="input-group">
+							<input type="text" class="form-control col-5" id="address-cap" placeholder="Address">
+							<input type="text" class="form-control col-1" id="prefix-cap" placeholder="Prefix">
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="addon-wrapping">&#8594;</span>
+							</div>
+							<div type="text" class="form-control" id="result-cap" style="overflow: scroll;">Address
 							</div>
 						</div>
 					</div>

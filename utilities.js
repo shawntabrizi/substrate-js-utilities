@@ -105,3 +105,30 @@ function seed2address() {
 	}
 }
 
+/* Change Address Prefix */
+let cap = {
+	"prefix": document.getElementById("prefix-cap"),
+	"address": document.getElementById("address-cap"),
+	"result": document.getElementById("result-cap")
+};
+
+cap.prefix.addEventListener("input", changeAddressPrefix);
+cap.address.addEventListener("input", changeAddressPrefix);
+
+function changeAddressPrefix() {
+	try {
+		let address = cap.address.value;
+		console.log(address)
+		let decoded = util_crypto.decodeAddress(address);
+		console.log(decoded)
+		let prefix = cap.prefix.value;
+		if (prefix) {
+			cap.result.innerText = util_crypto.encodeAddress(decoded, prefix);
+		} else {
+			cap.result.innerText = util_crypto.encodeAddress(decoded);
+		}
+	} catch(e) {
+		cap.result.innerText = "Error";
+		console.error(e);
+	}
+}
