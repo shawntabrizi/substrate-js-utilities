@@ -122,9 +122,7 @@ cap.address.addEventListener("input", changeAddressPrefix);
 function changeAddressPrefix() {
 	try {
 		let address = cap.address.value;
-		console.log(address)
 		let decoded = util_crypto.decodeAddress(address);
-		console.log(decoded)
 		let prefix = cap.prefix.value;
 		if (prefix) {
 			cap.result.innerText = util_crypto.encodeAddress(decoded, prefix);

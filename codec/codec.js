@@ -8,39 +8,39 @@ rawBytes.addEventListener('input', parseCustomType);
 /* CUSTOM TYPES EDITOR START */
 
 // create the editor
-const options = { mode: 'code' };
+const options = { mode: 'code', onChange: parseCustomType };
 const editor = new JSONEditor(customTypes, options);
 
 // set json
-const initialJson = [
-  { MyEnum: { _enum: ['A', 'B', 'C'] } },
-  { MyPartA: 'Vec<(MyEnum, u32)>' },
-  { MyType: '(MyPartA, u128)' },
-  { MyFinalType: 'Vec<MyType>' }
-];
+const initialJson = [{ MyVec: 'Vec<u16>' }];
 editor.set(initialJson);
+
 /* CUSTOM TYPES EDITOR END */
 
 const registry = new types.TypeRegistry();
 
 function parseCustomType() {
   try {
-    console.log(editor.get());
+    let typesObject = editor.get();
 
-    let typesArray = editor.get();
+    let lastTypeKey;
 
-    typesArray.map(type => {
-      registry.register(type);
-    });
+    if (Array.isArray(typesObject)) {
+      typesObject.map(type => {
+        registry.register(type);
+      });
 
-    let lastTypeObject = typesArray[typesArray.length - 1];
-    let lastTypeKey = Object.keys(lastTypeObject)[0];
-    console.log(lastTypeKey);
+      let lastTypeObject = typesObject[typesObject.length - 1];
+      lastTypeKey = Object.keys(lastTypeObject)[0];
+    } else {
+      registry.register(typesObject);
+      lastTypeKey = Object.keys(typesObject)[0];
+    }
+
     output.innerText = JSON.stringify(
       types.createType(registry, lastTypeKey, rawBytes.value)
     );
   } catch (e) {
-    console.error(e);
     output.innerText = e;
   }
 }
