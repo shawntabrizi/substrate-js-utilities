@@ -9,8 +9,8 @@ b2h.hex.addEventListener("input", hex2bn);
 
 function bn2hex() {
 	try {
-		b2h.hex.value = util.bnToHex(b2h.balance.value, { isLe: true});
-	} catch(e) {
+		b2h.hex.value = util.bnToHex(b2h.balance.value, { isLe: true });
+	} catch (e) {
 		b2h.hex.value = "Error";
 		console.error(e);
 	}
@@ -18,8 +18,8 @@ function bn2hex() {
 
 function hex2bn() {
 	try {
-		b2h.balance.value = util.hexToBn(b2h.hex.value, { isLe: true});
-	} catch(e) {
+		b2h.balance.value = util.hexToBn(b2h.hex.value, { isLe: true });
+	} catch (e) {
 		b2h.balance.value = "Error";
 		console.error(e);
 	}
@@ -37,7 +37,7 @@ a2h.hex.addEventListener("input", hex2account);
 function account2hex() {
 	try {
 		a2h.hex.value = util.u8aToHex(keyring.decodeAddress(a2h.account.value));
-	} catch(e) {
+	} catch (e) {
 		a2h.hex.value = "Error";
 		console.error(e);
 	}
@@ -46,7 +46,7 @@ function account2hex() {
 function hex2account() {
 	try {
 		a2h.account.value = keyring.encodeAddress(a2h.hex.value);
-	} catch(e) {
+	} catch (e) {
 		a2h.account.value = "Error";
 		console.error(e);
 	}
@@ -65,7 +65,7 @@ blake2.bits.addEventListener("input", blake2string);
 function blake2string() {
 	try {
 		blake2.hash.innerText = util_crypto.blake2AsHex(blake2.input.value, blake2.bits.value);
-	} catch(e) {
+	} catch (e) {
 		blake2.hash.innerText = "Error";
 		console.error(e);
 	}
@@ -84,7 +84,7 @@ xxhash.bits.addEventListener("input", xxhash2string);
 function xxhash2string() {
 	try {
 		xxhash.hash.innerText = util_crypto.xxhashAsHex(xxhash.input.value, xxhash.bits.value);
-	} catch(e) {
+	} catch (e) {
 		xxhash.hash.innerText = "Error";
 		console.error(e);
 	}
@@ -103,7 +103,7 @@ function seed2address() {
 		let k = new keyring.Keyring({ type: "sr25519" });
 		let user = k.addFromUri(s2a.seed.value);
 		s2a.address.innerText = user.address;
-	} catch(e) {
+	} catch (e) {
 		s2a.address.innerText = "Error";
 		console.error(e);
 	}
@@ -129,8 +129,32 @@ function changeAddressPrefix() {
 		} else {
 			cap.result.innerText = util_crypto.encodeAddress(decoded);
 		}
-	} catch(e) {
+	} catch (e) {
 		cap.result.innerText = "Error";
+		console.error(e);
+	}
+}
+
+/* Module ID to Address */
+let modid = {
+	"moduleId": document.getElementById("moduleId-modid"),
+	"address": document.getElementById("address-modid")
+};
+
+modid.moduleId.addEventListener("input", moduleId2Address);
+modid.address.addEventListener("input", moduleId2Address);
+
+function moduleId2Address() {
+	try {
+		let moduleId = modid.moduleId.value;
+		if (moduleId.length != 8) {
+			modid.address.innerText = "Module Id must be 8 characters (i.e. `py/trsry`)";
+			return
+		}
+		let address = util.stringToU8a(("modl" + moduleId).padEnd(32, '\0'));
+		modid.address.innerText = util_crypto.encodeAddress(address);
+	} catch (e) {
+		modid.address.innerText = "Error";
 		console.error(e);
 	}
 }
