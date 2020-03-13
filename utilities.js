@@ -175,14 +175,21 @@ function subAccountId() {
 		let index = subid.index.value;
 
 		let seedBytes = util.stringToU8a("modlpy/utilisuba");
-		let whoBytes = util_crypto.encodeAddress(address);
+		let whoBytes = util_crypto.decodeAddress(address);
+		if (isNaN(parseInt(index))) {
+			subid.subid.innerText = "Bad Index";
+			return;
+		}
 		let indexBytes = util.numberToU8a(parseInt(index));
 		let combinedBytes = new Uint8Array(seedBytes.length + whoBytes.length + indexBytes.length);
 		combinedBytes.set(seedBytes);
 		combinedBytes.set(whoBytes, seedBytes.length);
 		combinedBytes.set(indexBytes, seedBytes.length + whoBytes.length);
 
-		let entropy = util_crypto.blake2AsHex(combinedBytes);
+		console.log(seedBytes, whoBytes, indexBytes, combinedBytes)
+
+		let entropy = util_crypto.blake2AsU8a(combinedBytes);
+		console.log(entropy)
 		subid.subid.innerText = util_crypto.encodeAddress(entropy);
 	} catch (e) {
 		subid.subid.innerText = "Error";
