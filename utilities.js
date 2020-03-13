@@ -158,3 +158,34 @@ function moduleId2Address() {
 		console.error(e);
 	}
 }
+
+/* Sub Account Generator */
+let subid = {
+	"address": document.getElementById("address-subid"),
+	"index": document.getElementById("index-subid"),
+	"subid": document.getElementById("subid-subid")
+};
+
+subid.address.addEventListener("input", subAccountId);
+subid.index.addEventListener("input", subAccountId);
+
+function subAccountId() {
+	try {
+		let address = subid.address.value;
+		let index = subid.index.value;
+
+		let seedBytes = util.stringToU8a("modlpy/utilisuba");
+		let whoBytes = util_crypto.encodeAddress(address);
+		let indexBytes = util.numberToU8a(parseInt(index));
+		let combinedBytes = new Uint8Array(seedBytes.length + whoBytes.length + indexBytes.length);
+		combinedBytes.set(seedBytes);
+		combinedBytes.set(whoBytes, seedBytes.length);
+		combinedBytes.set(indexBytes, seedBytes.length + whoBytes.length);
+
+		let entropy = util_crypto.blake2AsHex(combinedBytes);
+		subid.subid.innerText = util_crypto.encodeAddress(entropy);
+	} catch (e) {
+		subid.subid.innerText = "Error";
+		console.error(e);
+	}
+}
