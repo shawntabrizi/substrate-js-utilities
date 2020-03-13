@@ -186,10 +186,7 @@ function subAccountId() {
 		combinedBytes.set(whoBytes, seedBytes.length);
 		combinedBytes.set(indexBytes, seedBytes.length + whoBytes.length);
 
-		console.log(seedBytes, whoBytes, indexBytes, combinedBytes)
-
 		let entropy = util_crypto.blake2AsU8a(combinedBytes);
-		console.log(entropy)
 		subid.subid.innerText = util_crypto.encodeAddress(entropy);
 	} catch (e) {
 		subid.subid.innerText = "Error";
