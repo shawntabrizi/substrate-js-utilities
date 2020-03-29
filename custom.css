@@ -4,11 +4,11 @@
 	width: auto;
 	padding: 15px;
   }
-  
+
   .footer {
 	background-color: #f5f5f5;
   }
-  
+
   pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
@@ -19,4 +19,9 @@
 
 h4 {
 	padding-top: 20px;
+}
+
+.form-control {
+  overflow-wrap: break-word;
+  height: auto;
 }

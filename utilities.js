@@ -71,6 +71,31 @@ function blake2string() {
 	}
 }
 
+/* Blake-256 Concat a String */
+let blake2concat = {
+	"input": document.getElementById("input-blake2-concat"),
+	"bits": document.getElementById("bits-blake2-concat"),
+	"hash": document.getElementById("hash-blake2-concat")
+};
+
+blake2concat.input.addEventListener("input", blake2ConcatString);
+blake2concat.bits.addEventListener("input", blake2ConcatString);
+
+function blake2ConcatString() {
+	try {
+		let hash = util_crypto.blake2AsHex(blake2concat.input.value, blake2concat.bits.value);
+		if (util.isHex(blake2concat.input.value)) {
+			hash += blake2concat.input.value.substr(2);
+		} else {
+			hash += util.stringToHex(blake2concat.input.value).substr(2);
+		}
+		blake2concat.hash.innerText = hash;
+	} catch (e) {
+		blake2concat.hash.innerText = "Error";
+		console.error(e);
+	}
+}
+
 /* XXHash a String */
 let xxhash = {
 	"input": document.getElementById("input-xxhash"),
@@ -78,14 +103,39 @@ let xxhash = {
 	"hash": document.getElementById("hash-xxhash")
 };
 
-xxhash.input.addEventListener("input", xxhash2string);
-xxhash.bits.addEventListener("input", xxhash2string);
+xxhash.input.addEventListener("input", xxhashString);
+xxhash.bits.addEventListener("input", xxhashString);
 
-function xxhash2string() {
+function xxhashString() {
 	try {
 		xxhash.hash.innerText = util_crypto.xxhashAsHex(xxhash.input.value, xxhash.bits.value);
 	} catch (e) {
 		xxhash.hash.innerText = "Error";
+		console.error(e);
+	}
+}
+
+/* XXHash Concat a String */
+let xxhashconcat = {
+	"input": document.getElementById("input-xxhash-concat"),
+	"bits": document.getElementById("bits-xxhash-concat"),
+	"hash": document.getElementById("hash-xxhash-concat")
+};
+
+xxhashconcat.input.addEventListener("input", xxhashConcatString);
+xxhashconcat.bits.addEventListener("input", xxhashConcatString);
+
+function xxhashConcatString() {
+	try {
+		let hash = util_crypto.xxhashAsHex(xxhashconcat.input.value, xxhashconcat.bits.value);
+		if (util.isHex(xxhashconcat.input.value)) {
+			hash += xxhashconcat.input.value.substr(2);
+		} else {
+			hash += util.stringToHex(xxhashconcat.input.value).substr(2);
+		}
+		xxhashconcat.hash.innerText = hash;
+	} catch (e) {
+		xxhashconcat.hash.innerText = "Error";
 		console.error(e);
 	}
 }
