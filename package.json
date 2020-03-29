@@ -1,0 +1,15 @@
+{
+  "name": "substrate-js-utilities",
+  "version": "1.0.0",
+  "main": "dependencies.js",
+  "repository": "https://github.com/shawntabrizi/substrate-js-utilities.git",
+  "author": "Shawn Tabrizi <shawntabrizi@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@polkadot/api": "^1.8.1",
+    "@polkadot/keyring": "^2.6.2",
+    "@polkadot/types": "^1.8.1",
+    "@polkadot/util": "^2.6.2",
+    "@polkadot/util-crypto": "^2.6.2"
+  }
+}
