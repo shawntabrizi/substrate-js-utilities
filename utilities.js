@@ -230,13 +230,13 @@ function subAccountId() {
 			subid.subid.innerText = "Bad Index";
 			return;
 		}
-		let indexBytes = util.numberToU8a(parseInt(index));
+		let indexBytes = util.bnToU8a(parseInt(index), 16);
 		let combinedBytes = new Uint8Array(seedBytes.length + whoBytes.length + indexBytes.length);
 		combinedBytes.set(seedBytes);
 		combinedBytes.set(whoBytes, seedBytes.length);
 		combinedBytes.set(indexBytes, seedBytes.length + whoBytes.length);
 
-		let entropy = util_crypto.blake2AsU8a(combinedBytes);
+		let entropy = util_crypto.blake2AsU8a(combinedBytes, 256);
 		subid.subid.innerText = util_crypto.encodeAddress(entropy);
 	} catch (e) {
 		subid.subid.innerText = "Error";
