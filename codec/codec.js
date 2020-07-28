@@ -17,7 +17,7 @@ editor.set(initialJson);
 
 /* CUSTOM TYPES EDITOR END */
 
-//const registry = new types.TypeRegistry();
+const registry = new types.TypeRegistry();
 
 function parseCustomType() {
   try {
