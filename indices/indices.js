@@ -1,6 +1,7 @@
 // Connect to Substrate endpoint
 let global = {
 	indices: {},
+	limit: 1000,
 };
 
 async function connect() {
@@ -16,20 +17,33 @@ async function connect() {
 }
 
 async function findIndices(a, b) {
-	for (let i = a; i < b; i++) {
+	document.getElementById('output').innerHTML = "Querying...";
+	let queries = [];
+	for (let i = a; i <= b; i++) {
 		// Don't look up values we already have
 		if (!(i in global.indices)) {
-			let account = await substrate.query.indices.accounts(i);
-			let values = [i];
-			let ss58 = substrate.createType('AccountIndex', i).toString();
-			values.push(ss58);
-			let indexInfo = account.isEmpty ? ["unclaimed", "", ""] : account.value;
-			global.indices[i] = values.concat(indexInfo);
+			let query = substrate.query.indices.accounts(i);
+			queries.push(i, query);
 		}
+	}
+
+	let results = await Promise.all(queries);
+
+	for (let i = 0; i < results.length; i += 2) {
+		let index = results[i];
+		let account = results[i+1];
+		let info =[];
+		info.push(index);
+		let ss58 = substrate.createType('AccountIndex', index).toString();
+		info.push(ss58);
+		let indexInfo = account.isEmpty ? ["unclaimed", "", ""] : account.value;
+		global.indices[index] = info.concat(indexInfo);
 	}
 }
 
 function createTable() {
+	document.getElementById('output').innerHTML = "Creating Table...";
+
 	let keys = ["Index", "SS58", "Owner", "Deposit", "Permanent?"];
 
 	let table = document.getElementById('indices-table');
@@ -66,6 +80,8 @@ function createTable() {
 	thead.appendChild(tr);
 	table.appendChild(thead);
 	table.appendChild(tbody);
+
+	document.getElementById('output').innerHTML = "Done.";
 }
 
 function clearIndices() {
@@ -84,6 +100,10 @@ async function queryIndices() {
 
 		let start = parseInt(document.getElementById("start").value);
 		let end = parseInt(document.getElementById("end").value);
+
+		if (end - start > global.limit) {
+			throw `Range is too large! Max range is ${global.limit} in one query.`;
+		}
 
 		await findIndices(start, end);
 		createTable();
