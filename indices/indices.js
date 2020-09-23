@@ -1,9 +1,10 @@
-// Connect to Substrate endpoint
+// Some global variables used by this code.
 let global = {
 	indices: {},
 	limit: 1000,
 };
 
+// Connect to Substrate endpoint
 async function connect() {
 	let endpoint = document.getElementById('endpoint').value;
 	if (!window.substrate || global.endpoint != endpoint) {
@@ -16,6 +17,7 @@ async function connect() {
 	}
 }
 
+// Batch query indices information from the chain
 async function findIndices(a, b) {
 	document.getElementById('output').innerHTML = "Querying...";
 	let queries = [];
@@ -41,6 +43,7 @@ async function findIndices(a, b) {
 	}
 }
 
+// Create a table with the index information
 function createTable() {
 	document.getElementById('output').innerHTML = "Creating Table...";
 
@@ -84,6 +87,7 @@ function createTable() {
 	document.getElementById('output').innerHTML = "Done.";
 }
 
+// Clear the table and all stored indices
 function clearIndices() {
 	global.indices = {};
 	let table = document.getElementById('indices-table');
