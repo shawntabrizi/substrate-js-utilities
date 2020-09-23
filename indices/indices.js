@@ -23,7 +23,8 @@ async function findIndices(a, b) {
 			let values = [i];
 			let ss58 = substrate.createType('AccountIndex', i).toString();
 			values.push(ss58);
-			global.indices[i] = values.concat(account.value);
+			let indexInfo = account.isEmpty ? ["unclaimed", "", ""] : account.value;
+			global.indices[i] = values.concat(indexInfo);
 		}
 	}
 }
