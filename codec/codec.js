@@ -38,7 +38,7 @@ function parseCustomType() {
     }
 
     output.innerText = JSON.stringify(
-      types.createType(registry, lastTypeKey, rawBytes.value)
+      types.createType(registry, lastTypeKey, rawBytes.value.trim())
     );
   } catch (e) {
     output.innerText = e;
