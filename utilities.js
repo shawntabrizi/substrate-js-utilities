@@ -185,17 +185,17 @@ function changeAddressPrefix() {
 	}
 }
 
-/* Public key to ss58 */
+/* Public key to SS58 */
 let pts = {
 	"address": document.getElementById("address-pts"),
 	"prefix": document.getElementById("prefix-pts"),
 	"result": document.getElementById("result-pts")
 };
 
-pts.prefix.addEventListener("input", changeAddressPrefix);
-pts.address.addEventListener("input", changeAddressPrefix);
+pts.prefix.addEventListener("input", publicToSS58);
+pts.address.addEventListener("input", publicToSS58);
 
-function changeAddressPrefix() {
+function publicToSS58() {
 	try {
 		let address = pts.address.value;
 		let prefix = pts.prefix.value;
@@ -206,6 +206,25 @@ function changeAddressPrefix() {
 		}
 	} catch (e) {
 		pts.result.innerText = "Error";
+		console.error(e);
+	}
+}
+
+/* SS58 to public key */
+let stp = {
+	"address": document.getElementById("address-stp"),
+	"prefix": document.getElementById("prefix-stp"),
+	"result": document.getElementById("result-stp")
+};
+
+stp.address.addEventListener("input", SS58ToPublic);
+
+function SS58ToPublic() {
+	try {
+		let address = stp.address.value;
+		stp.result.innerText = util.bnToHex(util_crypto.decodeAddress(address));
+	} catch (e) {
+		stp.result.innerText = "Error";
 		console.error(e);
 	}
 }
