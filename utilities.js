@@ -185,6 +185,31 @@ function changeAddressPrefix() {
 	}
 }
 
+/* Public key to ss58 */
+let pts = {
+	"address": document.getElementById("address-pts"),
+	"prefix": document.getElementById("prefix-pts"),
+	"result": document.getElementById("result-pts")
+};
+
+pts.prefix.addEventListener("input", changeAddressPrefix);
+pts.address.addEventListener("input", changeAddressPrefix);
+
+function changeAddressPrefix() {
+	try {
+		let address = pts.address.value;
+		let prefix = pts.prefix.value;
+		if (prefix) {
+			pts.result.innerText = util_crypto.encodeAddress(address, prefix);
+		} else {
+			pts.result.innerText = util_crypto.encodeAddress(address);
+		}
+	} catch (e) {
+		pts.result.innerText = "Error";
+		console.error(e);
+	}
+}
+
 /* Module ID to Address */
 let modid = {
 	"moduleId": document.getElementById("moduleId-modid"),
