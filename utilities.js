@@ -1,3 +1,30 @@
+/* String to Hex */
+let s2h = {
+	"string": document.getElementById("string-s2h"),
+	"hex": document.getElementById("hex-s2h")
+};
+
+s2h.string.addEventListener("input", string2hex);
+s2h.hex.addEventListener("input", hex2string);
+
+function string2hex() {
+	try {
+		s2h.hex.value = util.stringToHex(s2h.string.value);
+	} catch (e) {
+		s2h.hex.value = "Error";
+		console.error(e);
+	}
+}
+
+function hex2string() {
+	try {
+		s2h.string.value = util.hexToString(s2h.hex.value);
+	} catch (e) {
+		s2h.string.value = "Error";
+		console.error(e);
+	}
+}
+
 /* Balance to Hex (Little Endian) */
 let b2h = {
 	"balance": document.getElementById("balance-b2h"),
