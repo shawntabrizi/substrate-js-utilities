@@ -51,8 +51,6 @@ async function getNominations(address) {
 function createTable(validators) {
 	output("Creating Table...");
 
-	//let keys = Object.keys(validators[0]);
-
 	let keys = ["#", "display", "accountId", "commission", "lastClaimed", "selfStake"];
 	let table = document.getElementById('validators-table');
 
@@ -89,6 +87,30 @@ function createTable(validators) {
 	output("Done.");
 }
 
+function estimateReward() {
+	if (global.account && global.account.stakingLedger) {
+		let active = global.account.stakingLedger.active.toBn();
+		let inflation = document.getElementById('inflation').value;
+		let yearlyInflation = util.BN_ZERO;
+		for (var i = 0; i < inflation; i++) {
+			yearlyInflation = yearlyInflation.add(util.BN_ONE)
+		};
+		let yearlyReward = active.mul(yearlyInflation).div(util.BN_HUNDRED);
+		let daysInYear = util.BN_HUNDRED.mul(util.BN_THREE).add(util.BN_TEN.mul(util.BN_SIX)).add(util.BN_FIVE)
+
+		let dailyReward = yearlyReward.div(daysInYear);
+		global.account["selfStake"] = substrate.createType("Balance", dailyReward).toHuman();
+
+		document.getElementById('estimate').innerText = `Active Stake: ${substrate.createType("Balance", active).toHuman()}
+			Assuming Yearly Inflation: ${yearlyInflation}%
+			Estimated Yearly Rewards: ${substrate.createType("Balance", yearlyReward).toHuman()}
+			Estimated Daily Rewards: ${substrate.createType("Balance", dailyReward).toHuman()}
+		`;
+
+		document.getElementById('estimate').style.display = "block";
+	}
+}
+
 // Main function
 async function queryNominations() {
 	try {
@@ -97,9 +119,15 @@ async function queryNominations() {
 		let address = document.getElementById("address").value;
 
 		let validators = await getNominations(address);
+		estimateReward();
 		createTable(validators);
 
 	} catch (error) {
+		console.error(error);
 		output(error);
 	}
 }
+
+document.getElementById('inflation').addEventListener("change", estimateReward);
+
+connect();

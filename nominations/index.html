@@ -39,8 +39,16 @@
 				</div>
 				<input type="text" class="form-control" id="endpoint" value="wss://kusama-rpc.polkadot.io/"
 					placeholder="wss://..." />
+
+				<div class="input-group-prepend">
+					<span class="input-group-text">Inflation (%):</span>
+				</div>
+				<input type="number" class="form-control" id="inflation" value="12" placeholder="12" />
 			</div>
 			<div id="output"></div>
+			<br />
+			<div class="alert alert-success" role="alert" id="estimate" style="display: none"></div>
+			<br />
 			<div class="table-responsive">
 				<table id="validators-table" class="table table-striped table-sm">
 				</table>
