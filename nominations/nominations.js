@@ -49,6 +49,10 @@ async function getNominations(address) {
 
 // Create a table with the information
 function createTable(validators) {
+	if (!validators || validator.length == 0) {
+		output("No nominations found.");
+		return;
+	}
 	output("Creating Table...");
 
 	let keys = ["#", "display", "accountId", "commission", "lastClaimed", "selfStake"];
