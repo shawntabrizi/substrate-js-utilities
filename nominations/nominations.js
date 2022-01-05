@@ -95,12 +95,9 @@ function estimateReward() {
 	if (global.account && global.account.stakingLedger) {
 		let active = global.account.stakingLedger.active.toBn();
 		let inflation = document.getElementById('inflation').value;
-		let yearlyInflation = util.BN_ZERO;
-		for (var i = 0; i < inflation; i++) {
-			yearlyInflation = yearlyInflation.add(util.BN_ONE)
-		};
+		let yearlyInflation = new util.BN(inflation, 10);
 		let yearlyReward = active.mul(yearlyInflation).div(util.BN_HUNDRED);
-		let daysInYear = util.BN_HUNDRED.mul(util.BN_THREE).add(util.BN_TEN.mul(util.BN_SIX)).add(util.BN_FIVE)
+		let daysInYear = new util.BN("365", 10);
 
 		let dailyReward = yearlyReward.div(daysInYear);
 		global.account["selfStake"] = substrate.createType("Balance", dailyReward).toHuman();
