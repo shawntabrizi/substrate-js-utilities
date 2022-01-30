@@ -1,3 +1,6 @@
+const { WsProvider, ApiPromise } = polkadotApi;
+const { BN, BN_HUNDRED } = polkadotUtil;
+
 // Some global variables used by this code.
 let global = {
 	endpoint: "",
@@ -13,9 +16,9 @@ function output(text) {
 async function connect() {
 	let endpoint = document.getElementById('endpoint').value;
 	if (!window.substrate || global.endpoint != endpoint) {
-		const provider = new api.WsProvider(endpoint);
+		const provider = new WsProvider(endpoint);
 		output('Connecting to Endpoint...');
-		window.substrate = await api.ApiPromise.create({ provider });
+		window.substrate = await ApiPromise.create({ provider });
 		global.endpoint = endpoint;
 		output('Connected');
 	}
@@ -24,7 +27,7 @@ async function connect() {
 async function getNominations(address) {
 	output("Querying...");
 	if (!substrate.derive.staking) {
-		output("Could not find derive.staking api.");
+		output("Could not find derive.staking API.");
 		return;
 	}
 
@@ -95,9 +98,9 @@ function estimateReward() {
 	if (global.account && global.account.stakingLedger) {
 		let active = global.account.stakingLedger.active.toBn();
 		let inflation = document.getElementById('inflation').value;
-		let yearlyInflation = new util.BN(inflation, 10);
-		let yearlyReward = active.mul(yearlyInflation).div(util.BN_HUNDRED);
-		let daysInYear = new util.BN("365", 10);
+		let yearlyInflation = new BN(inflation, 10);
+		let yearlyReward = active.mul(yearlyInflation).div(BN_HUNDRED);
+		let daysInYear = new BN("365", 10);
 
 		let dailyReward = yearlyReward.div(daysInYear);
 		global.account["selfStake"] = substrate.createType("Balance", dailyReward).toHuman();

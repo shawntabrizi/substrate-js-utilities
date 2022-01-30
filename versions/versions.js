@@ -1,8 +1,10 @@
+const { ApiPromise, WsProvider } = polkadotApi;
+
 // Connect to Substrate endpoint
 async function connect(endpoint) {
-	const provider = new polkadotApi.WsProvider(endpoint);
+	const provider = new WsProvider(endpoint);
 	console.log(`Connecting to ${endpoint}`);
-	window.substrate = await polkadotApi.ApiPromise.create({ provider });
+	window.substrate = await ApiPromise.create({ provider });
 	console.log(`Connected to ${endpoint}`);
 }
 

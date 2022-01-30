@@ -1,3 +1,5 @@
+const { WsProvider, ApiPromise } = polkadotApi;
+
 // Some global variables used by this code.
 let global = {
 	indices: {},
@@ -8,9 +10,9 @@ let global = {
 async function connect() {
 	let endpoint = document.getElementById('endpoint').value;
 	if (!window.substrate || global.endpoint != endpoint) {
-		const provider = new api.WsProvider(endpoint);
+		const provider = new WsProvider(endpoint);
 		document.getElementById('output').innerHTML = 'Connecting to Endpoint...';
-		window.substrate = await api.ApiPromise.create({ provider });
+		window.substrate = await ApiPromise.create({ provider });
 		global.endpoint = endpoint;
 		document.getElementById('output').innerHTML = 'Connected';
 		clearIndices();

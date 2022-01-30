@@ -1,3 +1,5 @@
+const { TypeRegistry, createType } = polkadotTypes;
+
 let rawBytes = document.getElementById('rawBytes');
 let customTypes = document.getElementById('customTypes');
 let output = document.getElementById('output');
@@ -17,7 +19,7 @@ editor.set(initialJson);
 
 /* CUSTOM TYPES EDITOR END */
 
-const registry = new types.TypeRegistry();
+const registry = new TypeRegistry();
 
 function parseCustomType() {
   try {
@@ -38,7 +40,7 @@ function parseCustomType() {
     }
 
     output.innerText = JSON.stringify(
-      types.createType(registry, lastTypeKey, rawBytes.value.trim())
+      createType(registry, lastTypeKey, rawBytes.value.trim())
     );
   } catch (e) {
     output.innerText = e;
