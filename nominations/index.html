@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Simple Utilities for Substrate">
 	<meta name="author" content="Shawn Tabrizi">
-	<title>Substrate JS Utilities: Indices</title>
+	<title>Substrate JS Utilities: Nominations</title>
 
 	<!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -21,39 +21,36 @@
 		<div class="container">
 			<h1 class="mt-5"> <a href="../">&#8592; Substrate Utilities</a></h1>
 			<p class="lead">Hopefully this page helps you do something.</p>
-			<h4>Query Indices on a Substrate Chain</h4>
+			<h4>Query Nominations on a Substrate Chain</h4>
+			<div class="input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text">Address:</span>
+				</div>
+				<input type="text" class="form-control" id="address"
+					value="12hAtDZJGt4of3m2GqZcUCVAjZPALfvPwvtUTFZPQUbdX1Ud" placeholder="Address" />
+				<div class="input-group-append">
+					<a class="btn btn-lg btn-primary" onclick="queryNominations();" role="button">Query Nominations
+						&raquo;</a>
+				</div>
+			</div>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<span class="input-group-text">Endpoint:</span>
 				</div>
 				<input type="text" class="form-control" id="endpoint" value="wss://kusama-rpc.polkadot.io/"
 					placeholder="wss://..." />
-				<div class="input-group-append">
-					<a class="btn btn-lg btn-primary" onclick="queryIndices();" role="button">Query Indices
-						&raquo;</a>
+
+				<div class="input-group-prepend">
+					<span class="input-group-text">Inflation (%):</span>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text">Start Index:</span>
-						</div>
-						<input type="text" class="form-control" id="start" value="0" />
-					</div>
-				</div>
-				<div class="col">
-					<div class="input-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text">End Index:</span>
-						</div>
-						<input type="text" class="form-control" id="end" value="100" />
-					</div>
-				</div>
+				<input type="number" class="form-control" id="inflation" value="12" placeholder="12" />
 			</div>
 			<div id="output"></div>
+			<br />
+			<div class="alert alert-success" role="alert" id="estimate" style="display: none"></div>
+			<br />
 			<div class="table-responsive">
-				<table id="indices-table" class="table table-striped table-sm">
+				<table id="validators-table" class="table table-striped table-sm">
 				</table>
 			</div>
 		</div>
@@ -73,7 +70,7 @@
 	<script src="//unpkg.com/@polkadot/util-crypto/bundle-polkadot-util-crypto.js"></script>
 	<script src="//unpkg.com/@polkadot/types/bundle-polkadot-types.js"></script>
 	<script src="//unpkg.com/@polkadot/api/bundle-polkadot-api.js"></script>
-	<script src="indices.js"></script>
+	<script src="nominations.js"></script>
 </body>
 
 </html>

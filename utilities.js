@@ -1,3 +1,6 @@
+const { stringToHex, isHex, bnToHex, hexToBn, hexToString, u8aToHex, stringToU8a, bnToU8a } = polkadotUtil;
+const { blake2AsHex, xxhashAsHex, encodeAddress, decodeAddress, blake2AsU8a } = polkadotUtilCrypto;
+const { Keyring } = polkadotKeyring;
 /* String to Hex */
 let s2h = {
 	"string": document.getElementById("string-s2h"),
@@ -9,7 +12,7 @@ s2h.hex.addEventListener("input", hex2string);
 
 function string2hex() {
 	try {
-		s2h.hex.value = util.stringToHex(s2h.string.value);
+		s2h.hex.value = stringToHex(s2h.string.value);
 	} catch (e) {
 		s2h.hex.value = "Error";
 		console.error(e);
@@ -18,7 +21,7 @@ function string2hex() {
 
 function hex2string() {
 	try {
-		s2h.string.value = util.hexToString(s2h.hex.value);
+		s2h.string.value = hexToString(s2h.hex.value);
 	} catch (e) {
 		s2h.string.value = "Error";
 		console.error(e);
@@ -36,7 +39,7 @@ b2h.hex.addEventListener("input", hex2bn);
 
 function bn2hex() {
 	try {
-		b2h.hex.value = util.bnToHex(b2h.balance.value, { isLe: true });
+		b2h.hex.value = bnToHex(b2h.balance.value, { isLe: true });
 	} catch (e) {
 		b2h.hex.value = "Error";
 		console.error(e);
@@ -45,7 +48,7 @@ function bn2hex() {
 
 function hex2bn() {
 	try {
-		b2h.balance.value = util.hexToBn(b2h.hex.value, { isLe: true });
+		b2h.balance.value = hexToBn(b2h.hex.value, { isLe: true });
 	} catch (e) {
 		b2h.balance.value = "Error";
 		console.error(e);
@@ -63,7 +66,7 @@ a2h.hex.addEventListener("input", hex2account);
 
 function account2hex() {
 	try {
-		a2h.hex.value = util.u8aToHex(keyring.decodeAddress(a2h.account.value));
+		a2h.hex.value = u8aToHex(decodeAddress(a2h.account.value));
 	} catch (e) {
 		a2h.hex.value = "Error";
 		console.error(e);
@@ -72,7 +75,7 @@ function account2hex() {
 
 function hex2account() {
 	try {
-		a2h.account.value = keyring.encodeAddress(a2h.hex.value);
+		a2h.account.value = encodeAddress(a2h.hex.value);
 	} catch (e) {
 		a2h.account.value = "Error";
 		console.error(e);
@@ -91,7 +94,7 @@ blake2.bits.addEventListener("input", blake2string);
 
 function blake2string() {
 	try {
-		blake2.hash.innerText = util_crypto.blake2AsHex(blake2.input.value, blake2.bits.value);
+		blake2.hash.innerText = blake2AsHex(blake2.input.value, blake2.bits.value);
 	} catch (e) {
 		blake2.hash.innerText = "Error";
 		console.error(e);
@@ -110,11 +113,11 @@ blake2concat.bits.addEventListener("input", blake2ConcatString);
 
 function blake2ConcatString() {
 	try {
-		let hash = util_crypto.blake2AsHex(blake2concat.input.value, blake2concat.bits.value);
-		if (util.isHex(blake2concat.input.value)) {
+		let hash = blake2AsHex(blake2concat.input.value, blake2concat.bits.value);
+		if (isHex(blake2concat.input.value)) {
 			hash += blake2concat.input.value.substr(2);
 		} else {
-			hash += util.stringToHex(blake2concat.input.value).substr(2);
+			hash += stringToHex(blake2concat.input.value).substr(2);
 		}
 		blake2concat.hash.innerText = hash;
 	} catch (e) {
@@ -135,7 +138,7 @@ xxhash.bits.addEventListener("input", xxhashString);
 
 function xxhashString() {
 	try {
-		xxhash.hash.innerText = util_crypto.xxhashAsHex(xxhash.input.value, xxhash.bits.value);
+		xxhash.hash.innerText = xxhashAsHex(xxhash.input.value, xxhash.bits.value);
 	} catch (e) {
 		xxhash.hash.innerText = "Error";
 		console.error(e);
@@ -154,11 +157,11 @@ xxhashconcat.bits.addEventListener("input", xxhashConcatString);
 
 function xxhashConcatString() {
 	try {
-		let hash = util_crypto.xxhashAsHex(xxhashconcat.input.value, xxhashconcat.bits.value);
-		if (util.isHex(xxhashconcat.input.value)) {
+		let hash = xxhashAsHex(xxhashconcat.input.value, xxhashconcat.bits.value);
+		if (isHex(xxhashconcat.input.value)) {
 			hash += xxhashconcat.input.value.substr(2);
 		} else {
-			hash += util.stringToHex(xxhashconcat.input.value).substr(2);
+			hash += stringToHex(xxhashconcat.input.value).substr(2);
 		}
 		xxhashconcat.hash.innerText = hash;
 	} catch (e) {
@@ -177,7 +180,7 @@ s2a.seed.addEventListener("input", seed2address);
 
 function seed2address() {
 	try {
-		let k = new keyring.Keyring({ type: "sr25519" });
+		let k = new Keyring({ type: "sr25519" });
 		let user = k.addFromUri(s2a.seed.value);
 		s2a.address.innerText = user.address;
 	} catch (e) {
@@ -199,12 +202,12 @@ cap.address.addEventListener("input", changeAddressPrefix);
 function changeAddressPrefix() {
 	try {
 		let address = cap.address.value;
-		let decoded = util_crypto.decodeAddress(address);
+		let decoded = decodeAddress(address);
 		let prefix = cap.prefix.value;
 		if (prefix) {
-			cap.result.innerText = util_crypto.encodeAddress(decoded, prefix);
+			cap.result.innerText = encodeAddress(decoded, prefix);
 		} else {
-			cap.result.innerText = util_crypto.encodeAddress(decoded);
+			cap.result.innerText = encodeAddress(decoded);
 		}
 	} catch (e) {
 		cap.result.innerText = "Error";
@@ -228,8 +231,8 @@ function moduleId2Address() {
 			modid.address.innerText = "Module Id must be 8 characters (i.e. `py/trsry`)";
 			return
 		}
-		let address = util.stringToU8a(("modl" + moduleId).padEnd(32, '\0'));
-		modid.address.innerText = util_crypto.encodeAddress(address);
+		let address = stringToU8a(("modl" + moduleId).padEnd(32, '\0'));
+		modid.address.innerText = encodeAddress(address);
 	} catch (e) {
 		modid.address.innerText = "Error";
 		console.error(e);
@@ -251,20 +254,20 @@ function subAccountId() {
 		let address = subid.address.value;
 		let index = subid.index.value;
 
-		let seedBytes = util.stringToU8a("modlpy/utilisuba");
-		let whoBytes = util_crypto.decodeAddress(address);
+		let seedBytes = stringToU8a("modlpy/utilisuba");
+		let whoBytes = decodeAddress(address);
 		if (isNaN(parseInt(index))) {
 			subid.subid.innerText = "Bad Index";
 			return;
 		}
-		let indexBytes = util.bnToU8a(parseInt(index), 16).reverse();
+		let indexBytes = bnToU8a(parseInt(index), 16).reverse();
 		let combinedBytes = new Uint8Array(seedBytes.length + whoBytes.length + indexBytes.length);
 		combinedBytes.set(seedBytes);
 		combinedBytes.set(whoBytes, seedBytes.length);
 		combinedBytes.set(indexBytes, seedBytes.length + whoBytes.length);
 
-		let entropy = util_crypto.blake2AsU8a(combinedBytes, 256);
-		subid.subid.innerText = util_crypto.encodeAddress(entropy);
+		let entropy = blake2AsU8a(combinedBytes, 256);
+		subid.subid.innerText = encodeAddress(entropy);
 	} catch (e) {
 		subid.subid.innerText = "Error";
 		console.error(e);

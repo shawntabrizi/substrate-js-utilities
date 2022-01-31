@@ -1,3 +1,5 @@
+const { WsProvider, ApiPromise } = polkadotApi;
+
 // Some global variables used by this code.
 let global = {
 	indices: {},
@@ -8,9 +10,9 @@ let global = {
 async function connect() {
 	let endpoint = document.getElementById('endpoint').value;
 	if (!window.substrate || global.endpoint != endpoint) {
-		const provider = new api.WsProvider(endpoint);
+		const provider = new WsProvider(endpoint);
 		document.getElementById('output').innerHTML = 'Connecting to Endpoint...';
-		window.substrate = await api.ApiPromise.create({ provider });
+		window.substrate = await ApiPromise.create({ provider });
 		global.endpoint = endpoint;
 		document.getElementById('output').innerHTML = 'Connected';
 		clearIndices();
@@ -33,8 +35,8 @@ async function findIndices(a, b) {
 
 	for (let i = 0; i < results.length; i += 2) {
 		let index = results[i];
-		let account = results[i+1];
-		let info =[];
+		let account = results[i + 1];
+		let info = [];
 		info.push(index);
 		let ss58 = substrate.createType('AccountIndex', index).toString();
 		info.push(ss58);
@@ -68,11 +70,8 @@ function createTable() {
 
 	for (index of Object.keys(global.indices)) {
 		let tr2 = document.createElement('tr');
-		console.log(index);
-		console.log(global.indices[index])
 
 		for (key in keys) {
-			console.log(key)
 			let td = document.createElement('td');
 			td.innerText = global.indices[index][key];
 			tr2.appendChild(td);
