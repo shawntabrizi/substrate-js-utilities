@@ -273,3 +273,34 @@ function subAccountId() {
 		console.error(e);
 	}
 }
+
+/* u8a to Hex */
+let u82h = {
+	"u8a": document.getElementById("u8a-u82h"),
+	"hex": document.getElementById("hex-u82h")
+};
+
+u82h.u8a.addEventListener("input", u8a2hex);
+u82h.hex.addEventListener("input", hex2u8a);
+
+function u8a2hex() {
+	try {
+		let array = u82h.u8a.value.replace(/ /g, "").split(",").filter(e => e);
+		let u8array = new Uint8Array(array);
+		u82h.hex.value = u8aToHex(u8array);
+	} catch (e) {
+		u82h.hex.value = "Error";
+		console.error(e);
+	}
+}
+
+function hex2u8a() {
+	try {
+		let array = u82h.hex.value.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
+		let u8a = new Uint8Array(array);
+		u82h.u8a.value = u8a;
+	} catch (e) {
+		u82h.hex.value = "Error";
+		console.error(e);
+	}
+}
