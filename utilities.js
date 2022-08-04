@@ -260,7 +260,7 @@ function subAccountId() {
 			subid.subid.innerText = "Bad Index";
 			return;
 		}
-		let indexBytes = bnToU8a(parseInt(index), 16).reverse();
+		let indexBytes = bnToU8a(parseInt(index), { bitLength: 16 });
 		let combinedBytes = new Uint8Array(seedBytes.length + whoBytes.length + indexBytes.length);
 		combinedBytes.set(seedBytes);
 		combinedBytes.set(whoBytes, seedBytes.length);
