@@ -239,6 +239,36 @@ function moduleId2Address() {
 	}
 }
 
+/* Para ID to Address */
+let paraid = {
+	"paraId": document.getElementById("paraId-paraid"),
+	"address": document.getElementById("address-paraid")
+};
+let paraType = document.getElementById("type-paraid");
+
+paraid.paraId.addEventListener("input", paraId2Address);
+paraid.address.addEventListener("input", paraId2Address);
+paraType.addEventListener("input", paraId2Address);
+
+function paraId2Address() {
+	try {
+		let paraId = paraid.paraId.value;
+		if (!parseInt(paraId)) {
+			paraid.address.innerText = "Para Id should be a number";
+			return
+		}
+		let type = paraType.value;
+		let typeEncoded = stringToU8a(type);
+		let paraIdEncoded = bnToU8a(parseInt(paraId), 16).reverse();
+		let zeroPadding = new Uint8Array(32 - typeEncoded.length - paraIdEncoded.length).fill(0);
+		let address = new Uint8Array([...typeEncoded, ...paraIdEncoded, ...zeroPadding]);
+		paraid.address.innerText = encodeAddress(address);
+	} catch (e) {
+		paraid.address.innerText = "Error";
+		console.error(e);
+	}
+}
+
 /* Sub Account Generator */
 let subid = {
 	"address": document.getElementById("address-subid"),
