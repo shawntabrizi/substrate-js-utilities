@@ -259,7 +259,7 @@ function paraId2Address() {
 		}
 		let type = paraType.value;
 		let typeEncoded = stringToU8a(type);
-		let paraIdEncoded = bnToU8a(parseInt(paraId), 16).reverse();
+		let paraIdEncoded = bnToU8a(parseInt(paraId), 16);
 		let zeroPadding = new Uint8Array(32 - typeEncoded.length - paraIdEncoded.length).fill(0);
 		let address = new Uint8Array([...typeEncoded, ...paraIdEncoded, ...zeroPadding]);
 		paraid.address.innerText = encodeAddress(address);
