@@ -1,4 +1,4 @@
-const { stringToHex, isHex, bnToHex, hexToBn, hexToString, u8aToHex, stringToU8a, bnToU8a } = polkadotUtil;
+const { stringToHex, isHex, bnToHex, hexToBn, hexToU8a, hexToString, u8aToHex, stringToU8a, bnToU8a } = polkadotUtil;
 const { blake2AsHex, xxhashAsHex, encodeAddress, decodeAddress, blake2AsU8a } = polkadotUtilCrypto;
 const { Keyring } = polkadotKeyring;
 /* String to Hex */
@@ -300,6 +300,62 @@ function subAccountId() {
 		subid.subid.innerText = encodeAddress(entropy);
 	} catch (e) {
 		subid.subid.innerText = "Error";
+		console.error(e);
+	}
+}
+
+/* Ethereum to Substrate Address */
+let e2s = {
+	"eth": document.getElementById("eth-e2s"),
+	"sub": document.getElementById("sub-e2s"),
+};
+
+e2s.eth.addEventListener("input", eth2Sub);
+e2s.sub.addEventListener("input", sub2Eth);
+
+function eth2Sub() {
+	try {
+		let ethAddress = e2s.eth.value;
+
+		// Ensure the address is a valid Ethereum address (20 bytes)
+		if (!ethAddress.startsWith('0x') || ethAddress.length !== 42) {
+			e2s.sub.value = "Invalid Ethereum address";
+			return;
+		}
+
+		// Convert Ethereum address to bytes and append the `e`
+		const ethBytes = hexToU8a(ethAddress);
+		// Create Substrate address with all `0xee`.
+		const substrateBytes = new Uint8Array(32).fill(0xee);
+		// Copy the Ethereum bytes into the first 20 bytes
+		substrateBytes.set(ethBytes, 0);
+
+		// Convert to a Substrate address.
+		const ss58Address = encodeAddress(substrateBytes, 42);
+
+		e2s.sub.value = ss58Address;
+	} catch (e) {
+		e2s.sub.value = "Error";
+		console.error(e);
+	}
+}
+
+function sub2Eth() {
+	try {
+		let substrateAddress = e2s.sub.value;
+
+		// Decode the Substrate address into raw bytes.
+		const substrateBytes = decodeAddress(substrateAddress);
+
+		// Take the first 20 bytes to create the Ethereum address.
+		const ethBytes = substrateBytes.slice(0, 20);
+
+		// Convert to Ethereum address.
+		const ethAddress = u8aToHex(ethBytes);
+
+		e2s.eth.value = ethAddress;
+	} catch (e) {
+		e2s.eth.value = "Error";
 		console.error(e);
 	}
 }
