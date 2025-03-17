@@ -1,5 +1,5 @@
 const { stringToHex, isHex, bnToHex, hexToBn, hexToU8a, hexToString, u8aToHex, stringToU8a, bnToU8a } = polkadotUtil;
-const { blake2AsHex, xxhashAsHex, encodeAddress, decodeAddress, blake2AsU8a } = polkadotUtilCrypto;
+const { blake2AsHex, keccak256AsU8a, xxhashAsHex, encodeAddress, decodeAddress, blake2AsU8a } = polkadotUtilCrypto;
 const { Keyring } = polkadotKeyring;
 /* String to Hex */
 let s2h = {
@@ -340,6 +340,7 @@ function eth2Sub() {
 	}
 }
 
+// See https://github.com/paritytech/polkadot-sdk/blob/c4b8ec123afcef596fbc4ea3239ff9e392bcaf36/substrate/frame/revive/src/address.rs?plain=1#L101-L113
 function sub2Eth() {
 	try {
 		let substrateAddress = e2s.sub.value;
@@ -347,8 +348,16 @@ function sub2Eth() {
 		// Decode the Substrate address into raw bytes.
 		const substrateBytes = decodeAddress(substrateAddress);
 
-		// Take the first 20 bytes to create the Ethereum address.
-		const ethBytes = substrateBytes.slice(0, 20);
+		// if last 12 bytes are all `0xEE`, 
+		// we just strip the 0xEE suffix to get the original address
+		if (substrateBytes.slice(20).every(b => b === 0xEE)) {
+			e2s.eth.value = u8aToHex(substrateBytes.slice(0, 20));
+			return;
+		}
+
+		// this is an (ed|sr)25510 derived address
+		// We Hash it with keccak_256 and take the last 20 bytes
+		const ethBytes = keccak256AsU8a(substrateBytes).slice(-20);
 
 		// Convert to Ethereum address.
 		const ethAddress = u8aToHex(ethBytes);
