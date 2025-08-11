@@ -348,7 +348,7 @@ function sub2Eth() {
 		// Decode the Substrate address into raw bytes.
 		const substrateBytes = decodeAddress(substrateAddress);
 
-		// if last 12 bytes are all `0xEE`, 
+		// if last 12 bytes are all `0xEE`,
 		// we just strip the 0xEE suffix to get the original address
 		if (substrateBytes.slice(20).every(b => b === 0xEE)) {
 			e2s.eth.value = u8aToHex(substrateBytes.slice(0, 20));
@@ -396,6 +396,96 @@ function hex2u8a() {
 		u82h.u8a.value = u8a;
 	} catch (e) {
 		u82h.hex.value = "Error";
+		console.error(e);
+	}
+}
+
+/* Number to Hex */
+let n2h = {
+	"number": document.getElementById("number-n2h"),
+	"bits": document.getElementById("bits-n2h"),
+	"endian": document.getElementById("endian-n2h"),
+	"hex": document.getElementById("hex-n2h")
+};
+
+n2h.number.addEventListener("input", number2hex);
+n2h.bits.addEventListener("input", number2hex);
+n2h.endian.addEventListener("input", number2hex);
+n2h.hex.addEventListener("input", hex2number);
+
+function number2hex() {
+	// Clear previous error styles
+	n2h.number.classList.remove('is-invalid');
+	n2h.bits.classList.remove('is-invalid');
+
+	try {
+		const numberValue = n2h.number.value.trim();
+		const bitsValue = n2h.bits.value.trim();
+
+		// If input is empty, clear output
+		if (numberValue === '') {
+			n2h.hex.value = '';
+			return;
+		}
+
+		let bitLength = -1; // Default to auto-detection by the library
+		if (bitsValue !== '') {
+			const parsedBits = parseInt(bitsValue, 10);
+
+			// Sanity check: Bits must be a positive integer and a multiple of 8.
+			if (isNaN(parsedBits) || parsedBits <= 0 || parsedBits % 8 !== 0) {
+				n2h.hex.value = 'Invalid Bits';
+				n2h.bits.classList.add('is-invalid');
+				return;
+			}
+			bitLength = parsedBits;
+		}
+
+		const options = {
+			bitLength: bitLength,
+			isLe: n2h.endian.checked
+		};
+
+		// bnToHex will throw on invalid number strings (e.g., "abc")
+		n2h.hex.value = bnToHex(numberValue, options);
+
+	} catch (e) {
+		n2h.hex.value = 'Invalid Number';
+		n2h.number.classList.add('is-invalid');
+		console.error(e);
+	}
+}
+
+function hex2number() {
+	// Clear previous error styles
+	n2h.hex.classList.remove('is-invalid');
+
+	try {
+		const hexValue = n2h.hex.value.trim();
+
+		// If input is empty, clear output
+		if (hexValue === '') {
+			n2h.number.value = '';
+			return;
+		}
+
+		// Sanity check: Use the library's isHex util to validate.
+		// It checks for the '0x' prefix and valid characters.
+		if (!isHex(hexValue)) {
+			n2h.number.value = 'Invalid Hex';
+			n2h.hex.classList.add('is-invalid');
+			return;
+		}
+
+		const options = {
+			isLe: n2h.endian.checked
+		};
+
+		n2h.number.value = hexToBn(hexValue, options).toString();
+
+	} catch (e) {
+		n2h.number.value = 'Error';
+		n2h.hex.classList.add('is-invalid');
 		console.error(e);
 	}
 }
