@@ -1,4 +1,4 @@
-const { stringToHex, isHex, bnToHex, hexToBn, hexToU8a, hexToString, u8aToHex, stringToU8a, bnToU8a } = polkadotUtil;
+const { stringToHex, isHex, bnToHex, hexToBn, hexToU8a, hexToString, u8aToHex, stringToU8a, bnToU8a, compactFromU8a, compactToU8a } = polkadotUtil;
 const { blake2AsHex, keccak256AsU8a, xxhashAsHex, encodeAddress, decodeAddress, blake2AsU8a } = polkadotUtilCrypto;
 const { Keyring } = polkadotKeyring;
 /* String to Hex */
@@ -404,14 +404,35 @@ function hex2u8a() {
 let n2h = {
 	"number": document.getElementById("number-n2h"),
 	"bits": document.getElementById("bits-n2h"),
+	"bitsLabel": document.getElementById("bits-label-n2h"),
 	"endian": document.getElementById("endian-n2h"),
+	"endianLabel": document.getElementById("endian-label-n2h"),
+	"compact": document.getElementById("compact-n2h"),
 	"hex": document.getElementById("hex-n2h")
 };
+
+function toggleN2hInputs() {
+	const isCompact = n2h.compact.checked;
+	// Disable Bits and Endian options when Compact is selected, as they don't apply.
+	n2h.bits.disabled = isCompact;
+	n2h.endian.disabled = isCompact;
+	// Visually grey them out for better UX.
+	n2h.bitsLabel.style.opacity = isCompact ? 0.5 : 1;
+	n2h.endianLabel.style.opacity = isCompact ? 0.5 : 1;
+}
 
 n2h.number.addEventListener("input", number2hex);
 n2h.bits.addEventListener("input", number2hex);
 n2h.endian.addEventListener("input", number2hex);
 n2h.hex.addEventListener("input", hex2number);
+n2h.compact.addEventListener("input", () => {
+	toggleN2hInputs();
+	// Recalculate after toggling
+	number2hex();
+});
+
+// Set initial state on page load
+toggleN2hInputs();
 
 function number2hex() {
 	// Clear previous error styles
@@ -420,35 +441,37 @@ function number2hex() {
 
 	try {
 		const numberValue = n2h.number.value.trim();
-		const bitsValue = n2h.bits.value.trim();
 
-		// If input is empty, clear output
 		if (numberValue === '') {
 			n2h.hex.value = '';
 			return;
 		}
 
-		let bitLength = -1; // Default to auto-detection by the library
-		if (bitsValue !== '') {
-			const parsedBits = parseInt(bitsValue, 10);
-
-			// Sanity check: Bits must be a positive integer and a multiple of 8.
-			if (isNaN(parsedBits) || parsedBits <= 0 || parsedBits % 8 !== 0) {
-				n2h.hex.value = 'Invalid Bits';
-				n2h.bits.classList.add('is-invalid');
-				return;
+		if (n2h.compact.checked) {
+			// ** CORRECTED LOGIC **
+			// Use the dedicated compactToU8a function.
+			const u8a = compactToU8a(numberValue);
+			n2h.hex.value = u8aToHex(u8a);
+		} else {
+			// Logic for fixed-width encoding
+			const bitsValue = n2h.bits.value.trim();
+			let bitLength = -1;
+			if (bitsValue !== '') {
+				const parsedBits = parseInt(bitsValue, 10);
+				if (isNaN(parsedBits) || parsedBits <= 0 || parsedBits % 8 !== 0) {
+					n2h.hex.value = 'Invalid Bits';
+					n2h.bits.classList.add('is-invalid');
+					return;
+				}
+				bitLength = parsedBits;
 			}
-			bitLength = parsedBits;
+
+			const options = {
+				bitLength: bitLength,
+				isLe: n2h.endian.checked
+			};
+			n2h.hex.value = bnToHex(numberValue, options);
 		}
-
-		const options = {
-			bitLength: bitLength,
-			isLe: n2h.endian.checked
-		};
-
-		// bnToHex will throw on invalid number strings (e.g., "abc")
-		n2h.hex.value = bnToHex(numberValue, options);
-
 	} catch (e) {
 		n2h.hex.value = 'Invalid Number';
 		n2h.number.classList.add('is-invalid');
@@ -463,26 +486,30 @@ function hex2number() {
 	try {
 		const hexValue = n2h.hex.value.trim();
 
-		// If input is empty, clear output
 		if (hexValue === '') {
 			n2h.number.value = '';
 			return;
 		}
 
-		// Sanity check: Use the library's isHex util to validate.
-		// It checks for the '0x' prefix and valid characters.
 		if (!isHex(hexValue)) {
 			n2h.number.value = 'Invalid Hex';
 			n2h.hex.classList.add('is-invalid');
 			return;
 		}
 
-		const options = {
-			isLe: n2h.endian.checked
-		};
-
-		n2h.number.value = hexToBn(hexValue, options).toString();
-
+		if (n2h.compact.checked) {
+			// Logic for decoding a compact number
+			const u8a = hexToU8a(hexValue);
+			// compactFromU8a returns a tuple: [bytesConsumed, resultBn]
+			const [, bn] = compactFromU8a(u8a);
+			n2h.number.value = bn.toString();
+		} else {
+			// Logic for decoding a fixed-width number
+			const options = {
+				isLe: n2h.endian.checked
+			};
+			n2h.number.value = hexToBn(hexValue, options).toString();
+		}
 	} catch (e) {
 		n2h.number.value = 'Error';
 		n2h.hex.classList.add('is-invalid');

@@ -186,11 +186,17 @@
 								<span class="input-group-text">Number</span>
 							</div>
 							<input type="number" class="form-control" id="number-n2h" value="42">
-							<div class="input-group-prepend">
+							<div class="input-group-prepend" id="bits-label-n2h">
 								<span class="input-group-text">Bits</span>
 							</div>
 							<input type="number" class="form-control col-2" id="bits-n2h" value="32" step="8">
 							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" id="compact-n2h" aria-label="Toggle Compact Encoding">
+									<label class="form-check-label mb-0 ml-2" for="compact-n2h">Compact</label>
+								</div>
+							</div>
+							<div class="input-group-prepend" id="endian-label-n2h">
 								<div class="input-group-text">
 									<input type="checkbox" id="endian-n2h" aria-label="Toggle Little Endian">
 									<label class="form-check-label mb-0 ml-2" for="endian-n2h">Little Endian</label>
