@@ -1,4 +1,5 @@
 const { TypeRegistry, createType } = polkadotTypes;
+const { hexToU8a } = polkadotUtil;
 
 let rawBytes = document.getElementById('rawBytes');
 let customTypes = document.getElementById('customTypes');
@@ -39,8 +40,13 @@ function parseCustomType() {
       lastTypeKey = Object.keys(typesObject)[0];
     }
 
+    let input = rawBytes.value.trim();
+    // Pass as Uint8Array so polkadot-js treats it as raw SCALE (LE) bytes.
+    // Hex strings are interpreted as BE for numeric types, which is wrong
+    // for SCALE-encoded data.
+    let bytes = hexToU8a(input);
     output.innerText = JSON.stringify(
-      createType(registry, lastTypeKey, rawBytes.value.trim())
+      createType(registry, lastTypeKey, bytes)
     );
   } catch (e) {
     output.innerText = e;
