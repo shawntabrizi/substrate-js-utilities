@@ -269,6 +269,40 @@ function paraId2Address() {
 	}
 }
 
+/* Pallet ID Sub-Account */
+let psub = {
+	"palletId": document.getElementById("palletId-psub"),
+	"index": document.getElementById("index-psub"),
+	"address": document.getElementById("address-psub")
+};
+
+psub.palletId.addEventListener("input", palletSubAccount);
+psub.index.addEventListener("input", palletSubAccount);
+
+function palletSubAccount() {
+	try {
+		let palletId = psub.palletId.value;
+		let index = psub.index.value;
+
+		if (palletId.length != 8) {
+			psub.address.innerText = "Pallet Id must be 8 characters (e.g. `py/trsry`)";
+			return;
+		}
+
+		// "modl" prefix + 8 byte pallet id
+		let prefix = stringToU8a("modl" + palletId);
+		// SCALE encode the index as u16 (LE)
+		let indexBytes = index !== '' ? bnToU8a(parseInt(index), { bitLength: 16 }) : new Uint8Array(0);
+		// Pad with zeros to fill 32 bytes
+		let zeroPadding = new Uint8Array(32 - prefix.length - indexBytes.length).fill(0);
+		let address = new Uint8Array([...prefix, ...indexBytes, ...zeroPadding]);
+		psub.address.innerText = encodeAddress(address);
+	} catch (e) {
+		psub.address.innerText = "Error";
+		console.error(e);
+	}
+}
+
 /* Sub Account Generator */
 let subid = {
 	"address": document.getElementById("address-subid"),
