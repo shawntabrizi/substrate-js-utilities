@@ -425,7 +425,9 @@ function u8a2hex() {
 
 function hex2u8a() {
 	try {
-		let array = u82h.hex.value.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
+		let hex = u82h.hex.value;
+		if (hex.startsWith('0x')) hex = hex.slice(2);
+		let array = hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16));
 		let u8a = new Uint8Array(array);
 		u82h.u8a.value = u8a;
 	} catch (e) {
